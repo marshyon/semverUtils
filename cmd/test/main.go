@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strings"
 
@@ -14,6 +15,14 @@ var (
 )
 
 func main() {
+
+	// os.Chdir("../go")
+
+	mydir, err := os.Getwd()
+	if err == nil {
+		fmt.Println(mydir)
+	}
+
 	versionStrings := make([]string, 0)
 	// versionList := semver.Versions
 	// versionList := []semver.Version{}
@@ -34,7 +43,7 @@ func main() {
 			log.Fatalf("failed parting [%s] : %s\n", v, ve)
 		}
 		fmt.Println(v)
-		fmt.Printf("[%T]\n", v)
+		// fmt.Printf("[%T]\n", v)
 		versionList = append(versionList, v)
 	}
 
@@ -63,7 +72,7 @@ func main() {
 func parseGitLogDecoratedOutput(output string) {
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
-		fmt.Printf(":: %s\n", line)
+		// fmt.Printf(":: %s\n", line)
 		extractSemVerTag(line)
 	}
 

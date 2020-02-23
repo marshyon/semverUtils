@@ -10,17 +10,17 @@ import (
 func main() {
 	dbm := git.Db{}
 
-	p1 := architecture.Version{
-		Tag: "go2.3.4",
-	}
+	// p1 := architecture.Version{
+	// 	Tag: "go2.3.4",
+	// }
 
-	p2 := architecture.Version{
-		Tag: "go2.1.0",
-	}
+	// p2 := architecture.Version{
+	// 	Tag: "go2.1.0",
+	// }
 
 	ps := architecture.NewVersionService(dbm)
-	ps.Save(1, p1)
-	ps.Save(2, p2)
+	// ps.Save(1, p1)
+	// ps.Save(2, p2)
 	res, err := ps.Get()
 
 	fmt.Printf(">>>>\n%#v\n%s\n", res, err)
