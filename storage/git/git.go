@@ -45,7 +45,6 @@ func (m Db) Retrieve() map[int]architecture.Version {
 		tag := architecture.Version{
 			Tag: "0.0.1",
 		}
-		// vs.Save(len(m.Db)+1, tag)
 		vs.Save(1, tag)
 		fmt.Printf(">>DEBUG>> len of m is [%d]\n", len(m.Dbm))
 	} else {
@@ -61,14 +60,16 @@ func (m Db) Retrieve() map[int]architecture.Version {
 
 func parseGitLogDecoratedOutput(output string) (versions []string, commitTypes []string) {
 	lines := strings.Split(output, "\n")
+	versionPresent := false
 	for _, line := range lines {
 		fmt.Printf(":: %s\n", line)
 		vstr, ok := extractSemVerTag(line)
 		if ok {
 			versions = append(versions, vstr)
+			versionPresent = true
 		}
 		cstr, ok := extractSemCommit(line)
-		if ok {
+		if ok && versionPresent == false {
 			commitTypes = append(commitTypes, cstr)
 		}
 	}
@@ -89,8 +90,7 @@ func extractSemVerTag(s string) (versionString string, ok bool) {
 }
 
 func extractSemCommit(s string) (commitString string, ok bool) {
-	// var rgx = regexp.MustCompile(`tag:.+?([0-9\.]+).*?\)`)
-	// BREAKING CHANGE|build|chore|ci|docs|style|refactor|perf|test|feature|fix
+
 	var rgx = regexp.MustCompile(`(?i)(BREAKING CHANGE|build|chore|ci|docs|style|refactor|perf|test|feature|fix)\s*:\s*\S+`)
 
 	rs := rgx.FindStringSubmatch(s)
