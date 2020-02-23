@@ -15,43 +15,51 @@ import (
 )
 
 // Db map of Versions by integer key
-type Db map[int]architecture.Version
+// type dbmap map[int]architecture.Version
+
+// Db struct with db map
+type Db struct {
+	Dbm map[int]architecture.Version
+}
 
 // Save method for git backend
 func (m Db) Save(n int, p architecture.Version) {
-	m[n] = p
+	fmt.Printf("got %d : %s\n%#v\n", n, p, m)
+	m.Dbm[n] = p
 }
 
 // Retrieve method for git backend
 func (m Db) Retrieve() map[int]architecture.Version {
 	// dbm := Db{}
-
+	m.Dbm = make(map[int]architecture.Version)
 	exitStatus, output, err := runSystemCmd("git --no-pager log --decorate=short --no-color")
 	if err != nil {
 		log.Fatalf("ERROR running command [%s] [%d]", err, exitStatus)
 	}
-	versions := parseGitLogDecoratedOutput(output)
+	versions, commitTypes := parseGitLogDecoratedOutput(output)
 	fmt.Println(versions)
+	fmt.Println(commitTypes)
 	vs := architecture.NewVersionService(m)
 	if len(versions) == 0 {
 		fmt.Println("GOT NONE")
 		tag := architecture.Version{
 			Tag: "0.0.1",
 		}
-		vs.Save(len(m)+1, tag)
-		fmt.Printf(">>DEBUG>> len of m is [%d]\n", len(m))
+		// vs.Save(len(m.Db)+1, tag)
+		vs.Save(1, tag)
+		fmt.Printf(">>DEBUG>> len of m is [%d]\n", len(m.Dbm))
 	} else {
 		for _, v := range versions {
 			tag := architecture.Version{
 				Tag: v,
 			}
-			vs.Save(len(m)+1, tag)
+			vs.Save(len(m.Dbm)+1, tag)
 		}
 	}
-	return m
+	return m.Dbm
 }
 
-func parseGitLogDecoratedOutput(output string) (versions []string) {
+func parseGitLogDecoratedOutput(output string) (versions []string, commitTypes []string) {
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
 		fmt.Printf(":: %s\n", line)
@@ -59,8 +67,12 @@ func parseGitLogDecoratedOutput(output string) (versions []string) {
 		if ok {
 			versions = append(versions, vstr)
 		}
+		cstr, ok := extractSemCommit(line)
+		if ok {
+			commitTypes = append(commitTypes, cstr)
+		}
 	}
-	return versions
+	return versions, commitTypes
 
 }
 
@@ -71,8 +83,21 @@ func extractSemVerTag(s string) (versionString string, ok bool) {
 
 	if len(rs) > 0 {
 		versionString = rs[1]
-		// fmt.Printf("tag : [%s]\n", versionString)
 		return versionString, true
+	}
+	return "", false
+}
+
+func extractSemCommit(s string) (commitString string, ok bool) {
+	// var rgx = regexp.MustCompile(`tag:.+?([0-9\.]+).*?\)`)
+	// BREAKING CHANGE|build|chore|ci|docs|style|refactor|perf|test|feature|fix
+	var rgx = regexp.MustCompile(`(?i)(BREAKING CHANGE|build|chore|ci|docs|style|refactor|perf|test|feature|fix)\s*:\s*\S+`)
+
+	rs := rgx.FindStringSubmatch(s)
+
+	if len(rs) > 0 {
+		commitString = rs[1]
+		return commitString, true
 	}
 	return "", false
 }
