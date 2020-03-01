@@ -4,6 +4,7 @@ package architecture
 type Accessor interface {
 	Save(n int, p Version)
 	Retrieve() map[int]Version
+	Level() int
 }
 
 // Version struct is the main
@@ -33,6 +34,11 @@ func (vs VersionService) Get() (map[int]Version, error) {
 // the Save method is implemented by the storage backend
 func (vs VersionService) Save(n int, p Version) {
 	vs.a.Save(n, p)
+}
+
+func (vs VersionService) Level() int {
+	// fmt.Printf("HERE>>>>> %#v\n", vs.a.Level())
+	return vs.a.Level()
 }
 
 // NewVersionService creates a new service to action

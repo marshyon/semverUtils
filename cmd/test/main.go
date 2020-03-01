@@ -25,16 +25,16 @@ func main() {
 
 	versionStrings := make([]string, 0)
 	// versionList := semver.Versions
-	// versionList := []semver.Version{}
+	versionList := []semver.Version{}
 	// versionStrings := []string
 
-	versionStrings = append(versionStrings, "0.0.1")
-	versionStrings = append(versionStrings, "1.0.1")
-	versionStrings = append(versionStrings, "5.0.1")
-	versionStrings = append(versionStrings, "1.100.1")
-	versionStrings = append(versionStrings, "3.0.1")
-	versionStrings = append(versionStrings, "0.0.2")
-	versionStrings = append(versionStrings, "1.9.0")
+	// versionStrings = append(versionStrings, "0.0.1")
+	// versionStrings = append(versionStrings, "1.0.1")
+	// versionStrings = append(versionStrings, "5.0.1")
+	// versionStrings = append(versionStrings, "1.100.1")
+	// versionStrings = append(versionStrings, "3.0.1")
+	// versionStrings = append(versionStrings, "0.0.2")
+	// versionStrings = append(versionStrings, "1.9.0")
 
 	for _, v := range versionStrings {
 		fmt.Printf("[%s]\n", v)
@@ -72,7 +72,7 @@ func main() {
 func parseGitLogDecoratedOutput(output string) {
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
-		// fmt.Printf(":: %s\n", line)
+		fmt.Printf(":: %s\n", line)
 		extractSemVerTag(line)
 	}
 

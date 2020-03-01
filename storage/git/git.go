@@ -19,50 +19,110 @@ import (
 
 // Db struct with db map
 type Db struct {
-	Dbm map[int]architecture.Version
+	Dbm         map[int]architecture.Version
+	CommitLevel int
 }
+
+var (
+	level int
+)
 
 // Save method for git backend
 func (m Db) Save(n int, p architecture.Version) {
-	fmt.Printf("got %d : %s\n%#v\n", n, p, m)
+	// fmt.Printf("got %d : %s\n%#v\n", n, p, m)
 	m.Dbm[n] = p
+}
+
+func (m Db) Level() int {
+	return level
+}
+
+func (m Db) AccessLevel() int {
+	return m.CommitLevel
+}
+
+func (m Db) setAccessLevel(level int) {
+	m.CommitLevel = level
 }
 
 // Retrieve method for git backend
 func (m Db) Retrieve() map[int]architecture.Version {
-	// dbm := Db{}
+
 	m.Dbm = make(map[int]architecture.Version)
+	// fmt.Printf("HERE\n")
+	// m.CommitLevel = 999
+	// fmt.Printf("--[%d]\n", m.CommitLevel)
 	exitStatus, output, err := runSystemCmd("git --no-pager log --decorate=short --no-color")
 	if err != nil {
 		log.Fatalf("ERROR running command [%s] [%d]", err, exitStatus)
 	}
 	versions, commitTypes := parseGitLogDecoratedOutput(output)
-	fmt.Println(versions)
-	fmt.Println(commitTypes)
+	// fmt.Printf("versions : %v\n", versions)
+	fmt.Printf("commit types : %v\n", commitTypes)
 	vs := architecture.NewVersionService(m)
 	if len(versions) == 0 {
-		fmt.Println("GOT NONE")
+		// fmt.Println("GOT NONE")
+
 		tag := architecture.Version{
 			Tag: "0.0.1",
 		}
 		vs.Save(1, tag)
-		fmt.Printf(">>DEBUG>> len of m is [%d]\n", len(m.Dbm))
+		// fmt.Printf(">>DEBUG>> len of m is [%d]\n", len(m.Dbm))
 	} else {
+		// save version tags to store
 		for _, v := range versions {
 			tag := architecture.Version{
 				Tag: v,
 			}
 			vs.Save(len(m.Dbm)+1, tag)
+
 		}
+		// calculate highest level of commit message
+		highestCommit := calculateHighestCommit(commitTypes)
+		fmt.Printf("highest commit level is ====> [%d]\n", highestCommit)
+		// store highest level of commit message
+		level = highestCommit
+		// m.setAccessLevel(highestCommit)
+		// fmt.Printf("highest commit [%d]\n", highestCommit)
 	}
+
 	return m.Dbm
 }
 
+func calculateHighestCommit(cts []string) int {
+	currLevel := 2
+	if len(cts) == 0 {
+		return currLevel
+	}
+	for _, ct := range cts {
+		fmt.Printf(">>[%s]\n", strings.ToLower(ct))
+
+		switch commit := strings.ToLower(ct); commit {
+		case "breaking change":
+			currLevel = 0
+		case "feature":
+			currLevel = 1
+		case "chore":
+			currLevel = 2
+		case "documentation":
+			currLevel = 2
+		case "style":
+			currLevel = 2
+		case "refactor":
+			currLevel = 2
+		case "test":
+			currLevel = 2
+		case "fix":
+			currLevel = 2
+		}
+	}
+	return currLevel
+}
 func parseGitLogDecoratedOutput(output string) (versions []string, commitTypes []string) {
 	lines := strings.Split(output, "\n")
 	versionPresent := false
 	for _, line := range lines {
-		fmt.Printf(":: %s\n", line)
+		// fmt.Printf(":: %s\n", line)
 		vstr, ok := extractSemVerTag(line)
 		if ok {
 			versions = append(versions, vstr)
@@ -84,6 +144,7 @@ func extractSemVerTag(s string) (versionString string, ok bool) {
 
 	if len(rs) > 0 {
 		versionString = rs[1]
+		// fmt.Printf(">>detected[%s]\n", versionString)
 		return versionString, true
 	}
 	return "", false
