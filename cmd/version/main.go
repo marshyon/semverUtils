@@ -14,15 +14,13 @@ func main() {
 
 	ps := architecture.NewVersionService(dbm)
 
-	res, err := ps.Get()
+	res, level, err := ps.Get()
 	if err != nil {
 		log.Fatalf("failed to get : %s\n", err)
 	}
-	// for i, val := range res {
-	// 	fmt.Printf("==>[%d][%s]\n", i, val)
-	// }
+
 	fmt.Printf("CURRENT VERSION length of slice : [%d] first element : [%s]\n", len(res), res[1].Tag)
-	fmt.Printf("highest commit level == [[%#v]]\n", ps.Level())
+	fmt.Printf("highest commit level == [[%#v]]\n", level)
 	v, err := semver.Make(res[1].Tag)
 	if err != nil {
 		log.Fatalf("failed to create semver : %s\n", err)
@@ -30,7 +28,7 @@ func main() {
 	fmt.Printf("Major: %d\n", v.Major)
 	fmt.Printf("Minor: %d\n", v.Minor)
 	fmt.Printf("Patch: %d\n", v.Patch)
-	level := ps.Level()
+
 	fmt.Printf("CommitLevel=>[%d][%T]\n", level, level)
 
 	if level == 0 {
@@ -46,9 +44,6 @@ func main() {
 		fmt.Printf("MINOR\n")
 	}
 
-	// fmt.Printf("Major: %d\n", v.Major)
-	// fmt.Printf("Minor: %d\n", v.Minor)
-	// fmt.Printf("Patch: %d\n", v.Patch)
 	nextVersion := fmt.Sprintf("%d.%d.%d", v.Major, v.Minor, v.Patch)
 	fmt.Printf("NEXT VERSION : [%s]\n", nextVersion)
 

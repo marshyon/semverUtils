@@ -16,8 +16,8 @@ func (m DbMock) Save(n int, p architecture.Version) {
 }
 
 // Retrieve method for git backend
-func (m DbMock) Retrieve() map[int]architecture.Version {
-	return m
+func (m DbMock) Retrieve() (map[int]architecture.Version, int) {
+	return m, 2
 }
 
 func TestGetVersions(t *testing.T) {
@@ -35,8 +35,8 @@ func TestGetVersions(t *testing.T) {
 	vs.Save(1, v1)
 	vs.Save(2, v2)
 
-	res, err := vs.Get()
-	fmt.Printf("[%#v][%s]\n", res[1].Tag, err)
+	res, level, err := vs.Get()
+	fmt.Printf("[%#v] %d [%s]\n", res[1].Tag, level, err)
 	if err != nil {
 		t.Errorf("error returned storing %s : %s\n", res[1].Tag, err)
 	}
@@ -45,7 +45,7 @@ func TestGetVersions(t *testing.T) {
 		t.Errorf("expected v0.0.2, got [%s]\n", res[1].Tag)
 	}
 
-	res, err = vs.Get()
+	res, level, err = vs.Get()
 	fmt.Printf("[%#v][%s]\n", res[2].Tag, err)
 	if err != nil {
 		t.Errorf("error returned storing %s : %s\n", res[2].Tag, err)
