@@ -1,13 +1,19 @@
 package architecture
 
-// Accessor interface is used to access and abstract storage back-ends
+import (
+	"fmt"
+	"log"
+
+	"github.com/blang/semver"
+)
+
+// Accessor interface is used to access and abstract the back-end
 type Accessor interface {
 	Save(n int, p Version)
 	Retrieve() (map[int]Version, int)
 }
 
-// Version struct is the main
-// data componenent
+// Version struct used to store a version
 type Version struct {
 	Tag string
 }
@@ -22,9 +28,6 @@ type VersionService struct {
 // the Retrieve method is implemented by the storage backend
 func (vs VersionService) Get() (map[int]Version, int, error) {
 	v, l := vs.a.Retrieve()
-	// if v.Tag == "" {
-	// 	return Version{}, fmt.Errorf("no version or versions with id of %d", n)
-	// }
 	return v, l, nil
 }
 
@@ -35,10 +38,38 @@ func (vs VersionService) Save(n int, p Version) {
 	vs.a.Save(n, p)
 }
 
-// func (vs VersionService) Level() int {
-// 	// fmt.Printf("HERE>>>>> %#v\n", vs.a.Level())
-// 	return vs.a.Level()
-// }
+func (vs VersionService) GetCurrentVersion() (string, int, error) {
+	res, level, err := vs.Get()
+	return res[1].Tag, level, err
+}
+
+func (vs VersionService) GetNextVersion(currentVersion string, level int) (nextVersion string) {
+
+	if currentVersion == "" {
+		nextVersion = "0.0.1"
+	} else {
+
+		v, err := semver.Make(currentVersion)
+		if err != nil {
+			log.Fatalf("failed to create semver : %s\n", err)
+		}
+
+		if level == 0 {
+			v.Major = v.Major + 1
+			v.Minor = 0
+			v.Patch = 0
+		} else if level == 1 {
+			v.Minor = v.Minor + 1
+			v.Patch = 0
+		} else if level == 2 {
+			v.Patch = v.Patch + 1
+		}
+
+		nextVersion = fmt.Sprintf("%d.%d.%d", v.Major, v.Minor, v.Patch)
+	}
+
+	return nextVersion
+}
 
 // NewVersionService creates a new service to action
 // save and retrieve operations

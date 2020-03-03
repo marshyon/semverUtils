@@ -8,20 +8,51 @@ import (
 )
 
 // DbMock map of Versions by integer key
-type DbMock map[int]architecture.Version
+type DbMock struct {
+	Dbm         map[int]architecture.Version
+	CommitLevel int
+}
 
 // Save method for git backend
 func (m DbMock) Save(n int, p architecture.Version) {
-	m[n] = p
+	m.Dbm[n] = p
 }
 
 // Retrieve method for git backend
 func (m DbMock) Retrieve() (map[int]architecture.Version, int) {
-	return m, 2
+	return m.Dbm, 2
+}
+
+var committests = []struct {
+	in  string
+	out int
+}{
+	{"breaking change", 0},
+	{"feature", 1},
+	{"chore", 2},
+	{"documentation", 2},
+	{"style", 2},
+	{"refactor", 2},
+	{"test", 2},
+	{"fix", 2},
+}
+
+func TestCommitLevel(t *testing.T) {
+
+	for _, cl := range committests {
+		testLevel := commitLevel(cl.in)
+		fmt.Printf(">>TestCommitLevel> level[%s] got[%d] expected [%d]\n", cl.in, testLevel, cl.out)
+		if testLevel != cl.out {
+			t.Errorf("expected [%s][%d] but got [%d]", cl.in, cl.out, testLevel)
+		}
+
+	}
 }
 
 func TestGetVersions(t *testing.T) {
 	dbmMock := DbMock{}
+	dbmMock.Dbm = make(map[int]architecture.Version)
+	dbmMock.CommitLevel = 2
 
 	v1 := architecture.Version{
 		Tag: "v0.0.2",
@@ -38,7 +69,7 @@ func TestGetVersions(t *testing.T) {
 	res, level, err := vs.Get()
 	fmt.Printf("[%#v] %d [%s]\n", res[1].Tag, level, err)
 	if err != nil {
-		t.Errorf("error returned storing %s : %s\n", res[1].Tag, err)
+		t.Errorf("error returned getting %s : %s\n", res[1].Tag, err)
 	}
 
 	if res[1].Tag != "v0.0.2" {
@@ -48,7 +79,7 @@ func TestGetVersions(t *testing.T) {
 	res, level, err = vs.Get()
 	fmt.Printf("[%#v][%s]\n", res[2].Tag, err)
 	if err != nil {
-		t.Errorf("error returned storing %s : %s\n", res[2].Tag, err)
+		t.Errorf("error returned getting %s : %s\n", res[2].Tag, err)
 	}
 
 	// res, err = vs.Get(3)

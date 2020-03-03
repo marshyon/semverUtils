@@ -39,7 +39,6 @@ func (m Db) Retrieve() (map[int]architecture.Version, int) {
 	}
 	versions, commitTypes := parseGitLogDecoratedOutput(output)
 
-	fmt.Printf("commit types : %v\n", commitTypes)
 	vs := architecture.NewVersionService(m)
 	if len(versions) == 0 {
 
@@ -69,32 +68,38 @@ func calculateHighestCommit(cts []string) int {
 	}
 	currentLevel := 2
 	for _, ct := range cts {
-		fmt.Printf(">>[%s]\n", strings.ToLower(ct))
 
-		switch commit := strings.ToLower(ct); commit {
-		case "breaking change":
-			currentLevel = 0
-		case "feature":
-			currentLevel = 1
-		case "chore":
-			currentLevel = 2
-		case "documentation":
-			currentLevel = 2
-		case "style":
-			currentLevel = 2
-		case "refactor":
-			currentLevel = 2
-		case "test":
-			currentLevel = 2
-		case "fix":
-			currentLevel = 2
-		}
+		currentLevel = commitLevel(ct)
+
 		if currentLevel < overallLevel {
 			overallLevel = currentLevel
 		}
 	}
 	return overallLevel
 }
+
+func commitLevel(c string) (currentLevel int) {
+	switch commit := strings.ToLower(c); commit {
+	case "breaking change":
+		currentLevel = 0
+	case "feature":
+		currentLevel = 1
+	case "chore":
+		currentLevel = 2
+	case "documentation":
+		currentLevel = 2
+	case "style":
+		currentLevel = 2
+	case "refactor":
+		currentLevel = 2
+	case "test":
+		currentLevel = 2
+	case "fix":
+		currentLevel = 2
+	}
+	return currentLevel
+}
+
 func parseGitLogDecoratedOutput(output string) (versions []string, commitTypes []string) {
 	lines := strings.Split(output, "\n")
 	versionPresent := false
@@ -135,7 +140,6 @@ func extractSemCommit(s string) (commitString string, ok bool) {
 
 	if len(rs) > 0 {
 		commitString = rs[1]
-		fmt.Printf("commit string [%s]\n", commitString)
 		return commitString, true
 	}
 	return "", false
