@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	architecture "github.com/marshyon/codeStructure"
+	architecture "github.com/marshyon/semverUtils"
 )
 
 // Db map of Versions by integer key

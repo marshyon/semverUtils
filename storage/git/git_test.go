@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	architecture "github.com/marshyon/codeStructure"
+	architecture "github.com/marshyon/semverUtils"
 )
 
 // DbMock map of Versions by integer key

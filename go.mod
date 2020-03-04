@@ -1,4 +1,4 @@
-module github.com/marshyon/codeStructure
+module github.com/marshyon/semverUtils
 
 go 1.13
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	architecture "github.com/marshyon/codeStructure"
-	"github.com/marshyon/codeStructure/storage/git"
+	architecture "github.com/marshyon/semverUtils"
+	"github.com/marshyon/semverUtils/storage/git"
 )
 
 func main() {
