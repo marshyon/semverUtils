@@ -74,13 +74,14 @@ stages:
         targetType: 'inline'
         script: |
           echo ">>>>>>>>"
-          pwd
-          find $(Build.SourcesDirectory)/zip
+          #pwd
+          #find $(Build.SourcesDirectory)/zip
           cd $(Build.SourcesDirectory)/zip
           unzip *.zip
-          find .
-          ls -al 
+          #find .
+          #ls -al 
           file *
+          git --no-pager log --decorate=short --no-color 
       displayName: 'say something'
     - task: GitHubRelease@1
       displayName: 'GitHub release (create)'
