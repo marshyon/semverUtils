@@ -29,6 +29,7 @@ steps:
       ls -al
       echo "find"
       find cmd
+      go get -v "github.com/marshyon/semverUtils"
 - task: Go@0
   displayName: 'go build'
   inputs:
