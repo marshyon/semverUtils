@@ -18,35 +18,30 @@ steps:
   displayName: 'go get'
   inputs:
     arguments: '-d'
-
 - task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      echo "pwd"
-      pwd
-      echo "ls -al"
-      ls -al
-      echo "find"
-      find cmd
       go get -v "github.com/marshyon/semverUtils"
       go get -v github.com/cucumber/godog/cmd/godog
+  displayName: 'initialise project'
 - task: Go@0
   inputs:
     command: 'test'
     arguments: '-v ./...'
+- bash: |
+   godog
+  displayName: 'run godog tests'
 - task: Go@0
   displayName: 'go build'
   inputs:
     command: build
     arguments: '-o semverutil cmd/version/main.go'
-
 - task: ArchiveFiles@2
   displayName: 'Archive files'
   inputs:
     rootFolderOrFile: '$(Build.Repository.LocalPath)'
     includeRootFolder: False
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact'
   condition: succeededOrFailed()
