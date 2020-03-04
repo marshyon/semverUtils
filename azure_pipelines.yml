@@ -28,7 +28,7 @@ steps:
       echo "ls -al"
       ls -al
       echo "find"
-      find bin
+      find cmd
 - task: Go@0
   displayName: 'go build'
   inputs:
