@@ -1,0 +1,60 @@
+trigger:
+- master
+ 
+pool:
+  name: Azure Pipelines
+  vmImage: 'ubuntu-latest'
+ 
+variables:
+  env: 'prod'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+- stage: stage_1
+  displayName: 'build and test'
+  jobs:
+  - job: Provision
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: GoTool@0
+      displayName: 'Use Go 1.13'
+      inputs:
+        version: 1.13
+    - task: Go@0
+      displayName: 'go get'
+      inputs:
+        arguments: '-d'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          go get -v "github.com/marshyon/semverUtils"
+          go get -v github.com/cucumber/godog/cmd/godog
+      displayName: 'initialise project'
+    - task: Go@0
+      inputs:
+        command: 'test'
+        arguments: '-v ./...'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          /home/vsts/go/bin/godog
+      displayName: 'run godog tests'
+    - task: Go@0
+      displayName: 'go build'
+      inputs:
+        command: build
+        arguments: '-o semverutil cmd/version/main.go'
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(Build.Repository.LocalPath)'
+        includeRootFolder: False
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish artifact'
+      inputs:
+        ArtifactName: semverUtilApp
+      condition: succeededOrFailed()
