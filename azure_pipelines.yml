@@ -20,6 +20,8 @@ stages:
     steps:
     - task: GoTool@0
       displayName: 'Use Go 1.13'
+      inputs:
+        version: 1.13
     - task: Go@0
       displayName: 'go get'
       inputs:
