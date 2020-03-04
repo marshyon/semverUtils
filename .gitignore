@@ -15,3 +15,4 @@
 # vendor/
 cmd/version/version
 cmd/version/semverutils
+semverutils
