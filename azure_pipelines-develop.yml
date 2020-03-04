@@ -1,5 +1,15 @@
 trigger:
+<<<<<<< HEAD
+  branches:
+    include:
+    - develop
+    exclude:
+    - RELEASES.txt
+    - azure_pipelines-develop.yml
+    - azure_pipelines.yml
+=======
 - master
+>>>>>>> master
  
 pool:
   name: Azure Pipelines
