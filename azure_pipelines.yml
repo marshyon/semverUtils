@@ -24,14 +24,14 @@ steps:
     script: |
       go get -v "github.com/marshyon/semverUtils"
       go get -v github.com/cucumber/godog/cmd/godog
-      find / -name godog -exec file {} \;
+      #find / -name godog -exec file {} \;
   displayName: 'initialise project'
 - task: Go@0
   inputs:
     command: 'test'
     arguments: '-v ./...'
 - bash: |
-   godog
+   /home/vsts/go/bin/godog
   displayName: 'run godog tests'
 - task: Go@0
   displayName: 'go build'
