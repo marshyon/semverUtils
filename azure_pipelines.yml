@@ -68,12 +68,12 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: semverUtilApp
-        path: $(Build.SourcesDirectory)
+        path: $(Build.SourcesDirectory)/zip
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
-          echo "HERE"
+          echo ">>>>>>>>"
           pwd
-          find $(Build.SourcesDirectory)
+          find $(Build.SourcesDirectory)/zip
       displayName: 'say something'
