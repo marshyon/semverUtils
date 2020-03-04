@@ -48,13 +48,9 @@ stages:
       inputs:
         command: build
         arguments: '-o semverutil cmd/version/main.go'
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    - task: Bash@3
       inputs:
-        rootFolderOrFile: '$(Build.Repository.LocalPath)'
-        includeRootFolder: False
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish artifact'
-      inputs:
-        ArtifactName: semverUtilApp
-      condition: succeededOrFailed()
+        targetType: 'inline'
+        script: |
+          ./semverutil
+      displayName: 'run semverutil'
