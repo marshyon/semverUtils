@@ -27,11 +27,13 @@ steps:
       pwd
       echo "ls -al"
       ls -al
+      echo "find"
+      find bin
 - task: Go@0
   displayName: 'go build'
   inputs:
     command: build
-    arguments: '-o "$(System.TeamProject)/semverutil" cmd/version/*'
+    arguments: '-o "$(System.TeamProject)/semverutil" cmd/version/*.go'
 
 - task: ArchiveFiles@2
   displayName: 'Archive files'
