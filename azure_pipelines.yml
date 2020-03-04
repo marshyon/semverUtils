@@ -69,5 +69,5 @@ stages:
         script: |
           echo "HERE"
           pwd
-          ls -al
+          find $(System.DefaultWorkingDirectory)
       displayName: 'say something'
