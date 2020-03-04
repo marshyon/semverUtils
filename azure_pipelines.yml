@@ -33,7 +33,7 @@ steps:
   displayName: 'go build'
   inputs:
     command: build
-    arguments: '-o "$(System.TeamProject)/semverutil" cmd/version/main.go'
+    arguments: '-o semverutil cmd/version/main.go'
 
 - task: ArchiveFiles@2
   displayName: 'Archive files'
