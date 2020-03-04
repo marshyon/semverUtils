@@ -82,3 +82,8 @@ stages:
           ls -al 
           file *
       displayName: 'say something'
+    - task: GitHubRelease@1
+      displayName: 'GitHub release (create)'
+      inputs:
+        gitHubConnection: 'GitHub marshyon'
+        assets: '$(Build.SourcesDirectory)/zip/semverutil'
