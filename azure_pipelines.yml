@@ -19,6 +19,14 @@ steps:
   inputs:
     arguments: '-d'
 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "pwd"
+      pwd
+      echo "ls -al"
+      ls -al
 - task: Go@0
   displayName: 'go build'
   inputs:
