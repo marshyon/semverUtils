@@ -24,6 +24,7 @@ steps:
     script: |
       go get -v "github.com/marshyon/semverUtils"
       go get -v github.com/cucumber/godog/cmd/godog
+      find / -name godog -exec file {} \;
   displayName: 'initialise project'
 - task: Go@0
   inputs:
