@@ -68,11 +68,12 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: semverUtilApp
+        path: $(Build.SourcesDirectory)
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
           echo "HERE"
           pwd
-          find $(System.DefaultWorkingDirectory)
+          find $(Build.SourcesDirectory)
       displayName: 'say something'
