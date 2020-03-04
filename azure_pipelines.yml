@@ -76,4 +76,9 @@ stages:
           echo ">>>>>>>>"
           pwd
           find $(Build.SourcesDirectory)/zip
+          cd $(Build.SourcesDirectory)/zip
+          unzip *.zip
+          find .
+          ls -al 
+          file *
       displayName: 'say something'
