@@ -55,6 +55,8 @@ stages:
         includeRootFolder: False
     - task: PublishBuildArtifacts@1
       displayName: 'Publish artifact'
+      inputs:
+        ArtifactName: semverUtilApp
       condition: succeededOrFailed()
 - stage: stage_2
   displayName: 'publish relase'
@@ -63,6 +65,9 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: semverUtilApp
     - task: Bash@3
       inputs:
         targetType: 'inline'
