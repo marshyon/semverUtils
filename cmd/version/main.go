@@ -13,10 +13,11 @@ func main() {
 
 	vs := architecture.NewVersionService(dbm)
 
-	currentVersion, _, err := vs.GetCurrentVersion()
+	currentVersion, currentLevel, err := vs.GetCurrentVersion()
 	if err != nil {
 		log.Fatalf("failed to get current version: %s\n", err)
 	}
-	fmt.Printf("%s\n", currentVersion)
+	nextVersion := vs.GetNextVersion(currentVersion, currentLevel)
+	fmt.Printf("%s\n", nextVersion)
 
 }
