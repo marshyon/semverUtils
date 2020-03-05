@@ -93,7 +93,7 @@ func commitLevel(c string) (currentLevel int) {
 	case "refactor":
 		currentLevel = 2
 	case "test":
-		currentLevel = 2
+		currentLevel = 1
 	case "fix":
 		currentLevel = 2
 	}
