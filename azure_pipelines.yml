@@ -92,11 +92,19 @@ stages:
           git --no-pager log --decorate=short --no-color 
           echo "semverutil : "
           VERSION="v"$./semverutil)
-          echo "["$VERSION"]""
-
+          echo "["$VERSION"]"
+          git tag $VERSION
+          git push origin --tags
       displayName: 'say something'
     - task: GitHubRelease@1
       displayName: 'GitHub release (create)'
       inputs:
         gitHubConnection: 'GitHub marshyon'
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'gitTag'
+        tagPattern: 'v\d+\.\d+\.\d+'
         assets: '$(Build.SourcesDirectory)/zip/semverutil'
+        changeLogCompareToRelease: 'lastFullRelease'
+        changeLogType: 'commitBased'
