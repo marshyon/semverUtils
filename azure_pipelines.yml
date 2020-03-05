@@ -91,7 +91,7 @@ stages:
           unzip *.zip
           git --no-pager log --decorate=short --no-color 
           echo "semverutil : "
-          VERSION="v"$./semverutil)
+          VERSION="v"$(./semverutil)
           echo "["$VERSION"]"
           git tag $VERSION
           git push origin --tags
