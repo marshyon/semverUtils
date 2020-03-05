@@ -95,6 +95,7 @@ stages:
           VERSION="v"$(./semverutil)
           echo "["$VERSION"]"
           git config --global user.name "marshyon"
+          git remote add origin git@github.com:marshyon/semverUtils.git
           git tag $VERSION
           git push origin --tags
       displayName: 'label release'
