@@ -1,7 +1,6 @@
 package git
 
 import (
-	"fmt"
 	"testing"
 
 	architecture "github.com/marshyon/semverUtils"
@@ -41,7 +40,7 @@ func TestCommitLevel(t *testing.T) {
 
 	for _, cl := range committests {
 		testLevel := commitLevel(cl.in)
-		fmt.Printf(">>TestCommitLevel> level[%s] got[%d] expected [%d]\n", cl.in, testLevel, cl.out)
+		// fmt.Printf(">>TestCommitLevel> level[%s] got[%d] expected [%d]\n", cl.in, testLevel, cl.out)
 		if testLevel != cl.out {
 			t.Errorf("expected [%s][%d] but got [%d]", cl.in, cl.out, testLevel)
 		}
@@ -66,8 +65,8 @@ func TestGetVersions(t *testing.T) {
 	vs.Save(1, v1)
 	vs.Save(2, v2)
 
-	res, level, err := vs.Get()
-	fmt.Printf("[%#v] %d [%s]\n", res[1].Tag, level, err)
+	res, _, err := vs.Get()
+	// fmt.Printf("[%#v] %d [%s]\n", res[1].Tag, level, err)
 	if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[1].Tag, err)
 	}
@@ -76,8 +75,8 @@ func TestGetVersions(t *testing.T) {
 		t.Errorf("expected v0.0.2, got [%s]\n", res[1].Tag)
 	}
 
-	res, level, err = vs.Get()
-	fmt.Printf("[%#v][%s]\n", res[2].Tag, err)
+	res, _, err = vs.Get()
+	// fmt.Printf("[%#v][%s]\n", res[2].Tag, err)
 	if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[2].Tag, err)
 	}
