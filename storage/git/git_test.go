@@ -40,7 +40,8 @@ func TestCommitLevel(t *testing.T) {
 
 	for _, cl := range committests {
 		testLevel := commitLevel(cl.in)
-		if testLevel != cl.out {
+
+    if testLevel != cl.out {
 			t.Errorf("expected [%s][%d] but got [%d]", cl.in, cl.out, testLevel)
 		}
 
@@ -65,7 +66,8 @@ func TestGetVersions(t *testing.T) {
 	vs.Save(2, v2)
 
 	res, _, err := vs.Get()
-	if err != nil {
+
+  if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[1].Tag, err)
 	}
 
@@ -74,7 +76,8 @@ func TestGetVersions(t *testing.T) {
 	}
 
 	res, _, err = vs.Get()
-	if err != nil {
+
+  if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[2].Tag, err)
 	}
 }
