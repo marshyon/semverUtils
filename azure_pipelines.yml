@@ -75,19 +75,23 @@ stages:
       inputs:
         artifact: semverUtilApp
         path: $(Build.SourcesDirectory)/zip
+    - task: InstallSSHKey@0
+      displayName: 'Install an SSH key'
+      inputs:
+        knownHostsEntry: '|1|OYu5fjyruG+jLSxpgKkLNgwKbSU=|10iWMohPRDOgv5HBhEBSQZJLcLo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAsbJNNKxY2GXWG1oOO71rF+iAB/iSjegQxcYiUHha3A2f4u+bpz5E1r5/kbsYNaZPSRZeOJmPOmjy2xglehzKU='
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkGBjoZIF1vKCPGusI+xwgeVsNEWpoTGPHrC4veVpAr86SevU41tjpJJpcy37yGHGuzdsf27lebSzK77/USKBUNBmpOUD8/DAiZ8MQ6jR23tzDCU6UeFy2QukHcs9fIE4oVXM7mFgtxlJ6X4KahBVXU6CVvyWPowge1egydOJzfktU7ooKToe4n9hW53Kz8+W0UwvVcnEJ/lsuQgvwS5entQ0c1yvBrBQ0sfrGVe1PHtCTjExoU8Tubx2nMc5exVQJN5+cnvyXZyNEG6jxuY2Ey9Xdkaa16fxELs3W1iepdZFEBgE4C5GoR3/RTFafxyfadVAOF/y0WxgHR7mnODHp jon@jon-HP-Pavilion-Laptop-14-ce0xxx'
+        sshPassphrase: HZWRQu9BWY4pnk
+        sshKeySecureFile: 'id_az_devops_rsa'
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
-          echo ">>>>>>>>"
-          #pwd
-          #find $(Build.SourcesDirectory)/zip
+          find ~/.ssh
           cd $(Build.SourcesDirectory)/zip
           unzip *.zip
-          #find .
-          #ls -al 
-          file *
           git --no-pager log --decorate=short --no-color 
+          echo "semverutil : "
+          ./semverutil
       displayName: 'say something'
     - task: GitHubRelease@1
       displayName: 'GitHub release (create)'
