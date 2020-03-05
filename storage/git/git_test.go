@@ -32,7 +32,7 @@ var committests = []struct {
 	{"documentation", 2},
 	{"style", 2},
 	{"refactor", 2},
-	{"test", 2},
+	{"test", 1},
 	{"fix", 2},
 }
 
@@ -40,7 +40,7 @@ func TestCommitLevel(t *testing.T) {
 
 	for _, cl := range committests {
 		testLevel := commitLevel(cl.in)
-		// fmt.Printf(">>TestCommitLevel> level[%s] got[%d] expected [%d]\n", cl.in, testLevel, cl.out)
+
 		if testLevel != cl.out {
 			t.Errorf("expected [%s][%d] but got [%d]", cl.in, cl.out, testLevel)
 		}
@@ -66,8 +66,8 @@ func TestGetVersions(t *testing.T) {
 	vs.Save(2, v2)
 
 	res, _, err := vs.Get()
-	// fmt.Printf("[%#v] %d [%s]\n", res[1].Tag, level, err)
-	if err != nil {
+
+  if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[1].Tag, err)
 	}
 
@@ -76,13 +76,8 @@ func TestGetVersions(t *testing.T) {
 	}
 
 	res, _, err = vs.Get()
-	// fmt.Printf("[%#v][%s]\n", res[2].Tag, err)
+
 	if err != nil {
 		t.Errorf("error returned getting %s : %s\n", res[2].Tag, err)
 	}
-
-	// res, err = vs.Get(3)
-	// if err == nil {
-	// 	t.Errorf("something went wrong retrieving a non existen record %s : %s\n", res[3].Tag, err)
-	// }
 }
