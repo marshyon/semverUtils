@@ -37,8 +37,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          go get -v "github.com/marshyon/semverUtils"
+          go get -v github.com/marshyon/semverUtils
           go get -v github.com/cucumber/godog/cmd/godog
+          go get -v github.com/jstemmer/go-junit-report
       displayName: 'initialise project'
     - task: Go@0
       inputs:
@@ -50,11 +51,15 @@ stages:
         script: |
           /home/vsts/go/bin/godog
           /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
+          go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
       displayName: 'run godog tests'
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: 'godog_test_results.xml'
+        testResultsFiles: |
+          godog_test_results.xml
+          go_test_report.xml
+        mergeTestResults: true      
     - task: Go@0
       displayName: 'go build'
       inputs:
