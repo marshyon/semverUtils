@@ -91,7 +91,9 @@ stages:
           unzip *.zip
           git --no-pager log --decorate=short --no-color 
           echo "semverutil : "
-          ./semverutil
+          VERSION="v"$./semverutil)
+          echo "["$VERSION"]""
+
       displayName: 'say something'
     - task: GitHubRelease@1
       displayName: 'GitHub release (create)'
