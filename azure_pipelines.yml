@@ -94,9 +94,11 @@ stages:
           echo "semverutil : "
           VERSION="v"$(./semverutil)
           echo "["$VERSION"]"
-          git config --global user.name "marshyon"
-          git config --global url."git@github.com"
-          #git remote add origin git@github.com:marshyon/semverUtils.git
+          git remote -v
+          git remote rm origin
+          #git config --global user.name "marshyon"
+          #git config --global url."git@github.com"
+          git remote add origin git@github.com:marshyon/semverUtils.git
           git tag $VERSION
           echo "pushing to remote ..."
           git push origin --tags
