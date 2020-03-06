@@ -1,5 +1,7 @@
 # SemverUtils
 
+[![Build Status](https://dev.azure.com/marshyon/marshyon/_apis/build/status/semver-master-CI?branchName=master)](https://dev.azure.com/marshyon/marshyon/_build/latest?definitionId=9&branchName=master)
+
 Utility for Semantic Version control. Its purpose to is read semantic release styled commit messages and current tags to calculate the next version number to use when releasing a package of a Git controlled project.
 
 This is an initial release. Command line options are likely to change. 
