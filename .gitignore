@@ -17,3 +17,4 @@ cmd/version/version
 cmd/version/semverutils
 semverutils
 godog_test_results.xml
+RELEASE.txt
