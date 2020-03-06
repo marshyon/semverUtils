@@ -1,12 +1,12 @@
-trigger:
-  branches:
-    include:
-    - master
-  paths:
-    exclude:
-    - RELEASES.txt
-    - azure_pipelines-develop.yml
-    - azure_pipelines.yml
+trigger: none
+  # branches:
+  #   include:
+  #   - master
+  # paths:
+  #   exclude:
+  #   - RELEASES.txt
+  #   - azure_pipelines-develop.yml
+  #   - azure_pipelines.yml
  
 pool:
   name: Azure Pipelines
