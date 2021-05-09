@@ -45,25 +45,25 @@ stages:
           go get -v github.com/jstemmer/go-junit-report
       displayName: 'initialise project'
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          go test -v ./...
-      displayName: 'test project'
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       go test -v ./...
+    #   displayName: 'test project'
 
     # - task: Go@0
     #   inputs:
     #     command: 'test'
     #     arguments: '-v ./...'
-#     - task: Bash@3
-#       inputs:
-#         targetType: 'inline'
-#         script: |
-#           /home/vsts/go/bin/godog
-#           /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
-#           go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
-#       displayName: 'run godog tests'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          /home/vsts/go/bin/godog
+          /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
+          go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
+      displayName: 'run godog tests'
 #     - task: PublishTestResults@2
 #       inputs:
 #         testResultsFormat: 'JUnit'
