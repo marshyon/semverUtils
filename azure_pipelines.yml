@@ -88,9 +88,8 @@ stages:
       displayName: 'Install an SSH key'
       inputs:
         knownHostsEntry: '|1|OYu5fjyruG+jLSxpgKkLNgwKbSU=|10iWMohPRDOgv5HBhEBSQZJLcLo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAsbJNNKxY2GXWG1oOO71rF+iAB/iSjegQxcYiUHha3A2f4u+bpz5E1r5/kbsYNaZPSRZeOJmPOmjy2xglehzKU='
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkGBjoZIF1vKCPGusI+xwgeVsNEWpoTGPHrC4veVpAr86SevU41tjpJJpcy37yGHGuzdsf27lebSzK77/USKBUNBmpOUD8/DAiZ8MQ6jR23tzDCU6UeFy2QukHcs9fIE4oVXM7mFgtxlJ6X4KahBVXU6CVvyWPowge1egydOJzfktU7ooKToe4n9hW53Kz8+W0UwvVcnEJ/lsuQgvwS5entQ0c1yvBrBQ0sfrGVe1PHtCTjExoU8Tubx2nMc5exVQJN5+cnvyXZyNEG6jxuY2Ey9Xdkaa16fxELs3W1iepdZFEBgE4C5GoR3/RTFafxyfadVAOF/y0WxgHR7mnODHp jon@jon-HP-Pavilion-Laptop-14-ce0xxx'
-        sshPassphrase: HZWRQu9BWY4pnk
-        sshKeySecureFile: 'id_az_devops_rsa'
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnvAB989eOhTarruaB7A6H9Mn5CiNMNwdKzS5CcuIqRkyGLn0KQxVUpCZcCERmveNyaWoP5ycIP9An8Smry+uozoCZbnF1pEyZsn0TlfbBrWJRwePN7lj7pINSG4B8k47CEnp0a23e3BETJCkhLKyhhqgHRkEDN8goJLoHD3be7BAQcGC7Z4bK3D6T6gT239ccNdKGVJac6suFnH6oiwPIXQe17RXu2iYA8Lh7mGyTeqa0eG96kbC8HFnEezC7TE8MiWtxP8PFiXQ+G8H3nND38kOlxgMIzhDydTMSyHiWsI8ySJ1Di/K9z2XGU7azw+BXdohzvwWG64UAJ7VkZNFt'
+        sshKeySecureFile: 'id_rsa_az_devops'
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: semverUtilApp
