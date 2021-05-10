@@ -30,7 +30,7 @@ stages:
     - task: GoTool@0
       displayName: 'Use Go 1.13'
       inputs:
-        version: 1.13
+        version: '1.16'
     - task: Go@0
       displayName: 'go get'
       inputs:
@@ -40,13 +40,22 @@ stages:
         targetType: 'inline'
         script: |
           go get -v "github.com/marshyon/semverUtils"
+          go get -v github.com/cucumber/godog 
           go get -v github.com/cucumber/godog/cmd/godog
           go get -v github.com/jstemmer/go-junit-report
       displayName: 'initialise project'
-    - task: Go@0
-      inputs:
-        command: 'test'
-        arguments: '-v ./...'
+
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       go test -v ./...
+    #   displayName: 'test project'
+
+    # - task: Go@0
+    #   inputs:
+    #     command: 'test'
+    #     arguments: '-v ./...'
     - task: Bash@3
       inputs:
         targetType: 'inline'
