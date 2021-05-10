@@ -47,29 +47,29 @@ stages:
       inputs:
         command: 'test'
         arguments: '-v ./...'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          /home/vsts/go/bin/godog
-          /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
-          go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
-      displayName: 'run godog tests'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: |
-          godog_test_results.xml
-          go_test_report.xml
-        mergeTestResults: true      
-    - task: Go@0
-      displayName: 'go build'
-      inputs:
-        command: build
-        arguments: '-o semverutil cmd/version/main.go'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          ./semverutil
-      displayName: 'run semverutil'
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       /home/vsts/go/bin/godog
+    #       /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
+    #       go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
+    #   displayName: 'run godog tests'
+    # - task: PublishTestResults@2
+    #   inputs:
+    #     testResultsFormat: 'JUnit'
+    #     testResultsFiles: |
+    #       godog_test_results.xml
+    #       go_test_report.xml
+    #     mergeTestResults: true      
+    # - task: Go@0
+    #   displayName: 'go build'
+    #   inputs:
+    #     command: build
+    #     arguments: '-o semverutil cmd/version/main.go'
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       ./semverutil
+    #   displayName: 'run semverutil'
