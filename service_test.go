@@ -68,10 +68,18 @@ func weShouldHaveReturnedANewVersionOf(arg1 string) error {
 	return nil
 }
 
-func FeatureContext(s *godog.Suite) {
-	s.Step(`^we have no current version$`, weHaveNoCurrentVersion)
-	s.Step(`^we should have a new version of "([^"]*)"$`, weShouldHaveANewVersionOf)
-	s.Step(`^we have a current version of "([^"]*)"\$$`, weHaveACurrentVersionOf)
-	s.Step(`^we release (\d+)\$$`, weRelease)
-	s.Step(`^we should have returned a new version of "([^"]*)"\$$`, weShouldHaveReturnedANewVersionOf)
+//func FeatureContext(s *godog.Suite) {
+	//s.Step(`^we have no current version$`, weHaveNoCurrentVersion)
+	//s.Step(`^we should have a new version of "([^"]*)"$`, weShouldHaveANewVersionOf)
+	//s.Step(`^we have a current version of "([^"]*)"\$$`, weHaveACurrentVersionOf)
+	//s.Step(`^we release (\d+)\$$`, weRelease)
+	//s.Step(`^we should have returned a new version of "([^"]*)"\$$`, weShouldHaveReturnedANewVersionOf)
+//}
+
+func InitializeScenario(ctx *godog.ScenarioContext) {
+        ctx.Step(`^we have no current version$`, weHaveNoCurrentVersion)
+        ctx.Step(`^we should have a new version of "([^"]*)"$`, weShouldHaveANewVersionOf)
+        ctx.Step(`^we have a current version of "([^"]*)"\$$`, weHaveACurrentVersionOf)
+        ctx.Step(`^we release (\d+)\$$`, weRelease)
+        ctx.Step(`^we should have returned a new version of "([^"]*)"\$$`, weShouldHaveReturnedANewVersionOf)
 }

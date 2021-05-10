@@ -64,74 +64,75 @@ stages:
           /home/vsts/go/bin/godog --format=junit > godog_test_results.xml
           go test -v ./... | /home/vsts/go/bin/go-junit-report > go_test_report.xml
       displayName: 'run godog tests'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: |
-          godog_test_results.xml
-          go_test_report.xml
-        mergeTestResults: true      
-    - task: Go@0
-      displayName: 'go build'
-      inputs:
-        command: build
-        arguments: '-o semverutil cmd/version/main.go'
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
-      inputs:
-        rootFolderOrFile: '$(Build.Repository.LocalPath)'
-        includeRootFolder: False
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish artifact'
-      inputs:
-        ArtifactName: semverUtilApp
-      condition: succeededOrFailed()
-- stage: stage_2
-  displayName: 'publish relase'
-  jobs:
-  - job: Publish
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: InstallSSHKey@0
-      displayName: 'Install an SSH key'
-      inputs:
-        knownHostsEntry: '|1|OYu5fjyruG+jLSxpgKkLNgwKbSU=|10iWMohPRDOgv5HBhEBSQZJLcLo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAsbJNNKxY2GXWG1oOO71rF+iAB/iSjegQxcYiUHha3A2f4u+bpz5E1r5/kbsYNaZPSRZeOJmPOmjy2xglehzKU='
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnvAB989eOhTarruaB7A6H9Mn5CiNMNwdKzS5CcuIqRkyGLn0KQxVUpCZcCERmveNyaWoP5ycIP9An8Smry+uozoCZbnF1pEyZsn0TlfbBrWJRwePN7lj7pINSG4B8k47CEnp0a23e3BETJCkhLKyhhqgHRkEDN8goJLoHD3be7BAQcGC7Z4bK3D6T6gT239ccNdKGVJac6suFnH6oiwPIXQe17RXu2iYA8Lh7mGyTeqa0eG96kbC8HFnEezC7TE8MiWtxP8PFiXQ+G8H3nND38kOlxgMIzhDydTMSyHiWsI8ySJ1Di/K9z2XGU7azw+BXdohzvwWG64UAJ7VkZNFt'
-        sshKeySecureFile: 'id_rsa_az_devops'
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifact: semverUtilApp
-        path: $(Build.SourcesDirectory)/zip
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          find ~/.ssh
-          cd $(Build.SourcesDirectory)/zip
-          unzip *.zip
-          git --no-pager log --decorate=short --no-color 
-          echo "semverutil : "
-          VERSION="v"$(./semverutil)
-          echo "["$VERSION"]"
-          git remote -v
-          git remote rm origin
-          #git config --global user.name "marshyon"
-          #git config --global url."git@github.com"
-          git remote add origin git@github.com:marshyon/semverUtils.git
-          git tag $VERSION
-          echo "pushing to remote ..."
-          git push origin --tags
-      displayName: 'label release'
-    - task: GitHubRelease@1
-      displayName: 'GitHub release (create)'
-      inputs:
-        gitHubConnection: 'GitHub marshyon'
-        repositoryName: '$(Build.Repository.Name)'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'gitTag'
-        tagPattern: 'v\d+\.\d+\.\d+'
-        assets: '$(Build.SourcesDirectory)/zip/semverutil'
-        changeLogCompareToRelease: 'lastFullRelease'
-        changeLogType: 'commitBased'
+#     - task: PublishTestResults@2
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: |
+#           godog_test_results.xml
+#           go_test_report.xml
+#         mergeTestResults: true      
+#     - task: Go@0
+#       displayName: 'go build'
+#       inputs:
+#         command: build
+#         arguments: '-o semverutil cmd/version/main.go'
+#     - task: ArchiveFiles@2
+#       displayName: 'Archive files'
+#       inputs:
+#         rootFolderOrFile: '$(Build.Repository.LocalPath)'
+#         includeRootFolder: False
+#     - task: PublishBuildArtifacts@1
+#       displayName: 'Publish artifact'
+#       inputs:
+#         ArtifactName: semverUtilApp
+#       condition: succeededOrFailed()
+# - stage: stage_2
+#   displayName: 'publish relase'
+#   jobs:
+#   - job: Publish
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#     - task: InstallSSHKey@0
+#       displayName: 'Install an SSH key'
+#       inputs:
+#         knownHostsEntry: '|1|OYu5fjyruG+jLSxpgKkLNgwKbSU=|10iWMohPRDOgv5HBhEBSQZJLcLo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAsbJNNKxY2GXWG1oOO71rF+iAB/iSjegQxcYiUHha3A2f4u+bpz5E1r5/kbsYNaZPSRZeOJmPOmjy2xglehzKU='
+#         sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkGBjoZIF1vKCPGusI+xwgeVsNEWpoTGPHrC4veVpAr86SevU41tjpJJpcy37yGHGuzdsf27lebSzK77/USKBUNBmpOUD8/DAiZ8MQ6jR23tzDCU6UeFy2QukHcs9fIE4oVXM7mFgtxlJ6X4KahBVXU6CVvyWPowge1egydOJzfktU7ooKToe4n9hW53Kz8+W0UwvVcnEJ/lsuQgvwS5entQ0c1yvBrBQ0sfrGVe1PHtCTjExoU8Tubx2nMc5exVQJN5+cnvyXZyNEG6jxuY2Ey9Xdkaa16fxELs3W1iepdZFEBgE4C5GoR3/RTFafxyfadVAOF/y0WxgHR7mnODHp jon@jon-HP-Pavilion-Laptop-14-ce0xxx'
+#         sshPassphrase: HZWRQu9BWY4pnk
+#         sshKeySecureFile: 'id_az_devops_rsa'
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         artifact: semverUtilApp
+#         path: $(Build.SourcesDirectory)/zip
+#     - task: Bash@3
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           find ~/.ssh
+#           cd $(Build.SourcesDirectory)/zip
+#           unzip *.zip
+#           git --no-pager log --decorate=short --no-color 
+#           echo "semverutil : "
+#           VERSION="v"$(./semverutil)
+#           echo "["$VERSION"]"
+#           git remote -v
+#           git remote rm origin
+#           #git config --global user.name "marshyon"
+#           #git config --global url."git@github.com"
+#           git remote add origin git@github.com:marshyon/semverUtils.git
+#           git tag $VERSION
+#           echo "pushing to remote ..."
+#           git push origin --tags
+#       displayName: 'label release'
+#     - task: GitHubRelease@1
+#       displayName: 'GitHub release (create)'
+#       inputs:
+#         gitHubConnection: 'GitHub marshyon'
+#         repositoryName: '$(Build.Repository.Name)'
+#         action: 'create'
+#         target: '$(Build.SourceVersion)'
+#         tagSource: 'gitTag'
+#         tagPattern: 'v\d+\.\d+\.\d+'
+#         assets: '$(Build.SourcesDirectory)/zip/semverutil'
+#         changeLogCompareToRelease: 'lastFullRelease'
+#         changeLogType: 'commitBased'
